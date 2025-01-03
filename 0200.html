@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Newsweek's Coffee Report (demo)</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #0066cc;
+            font-size: 28px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            font-size: 16px;
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        #button-row {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .time-button {
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 14px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .time-button:hover {
+            background-color: #004999;
+        }
+        .time-button.active {
+            background-color: #cc0000;
+        }
+        .video-container {
+            margin-bottom: 20px;
+        }
+        .story-container {
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        #story-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #0066cc;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #0066cc;
+            padding-bottom: 10px;
+        }
+        #story-content {
+            text-align: justify;
+            line-height: 1.6;
+            font-size: 16px;
+        }
+        .graph-container {
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Newsweek's Coffee Report (demo)</h1>
+        <p class="subtitle">Relative Price of Arabica coffee futures set by the Intercontinental Exchange in New York.</p>
+        <p class="subtitle">(Data source: Trading Economics)</p>
+
+        <div id="button-row">
+            <button class="time-button active" data-period="1D">1D</button>
+            <button class="time-button" data-period="5D">5D</button>
+            <button class="time-button" data-period="1M">1M</button>
+            <button class="time-button" data-period="6M">6M</button>
+            <button class="time-button" data-period="1Y">1Y</button>
+            <button class="time-button" data-period="5Y">5Y</button>
+        </div>
+
+        <div class="video-container">
+            <iframe id="video-frame" width="100%" height="450" src="https://www.youtube.com/embed/0LaZXlbL3dg" frameborder="0" allowfullscreen></iframe>
+        </div>
+
+        <div class="story-container">
+            <h2 id="story-title">The Coffee Report - 1 Day</h2>
+            <div id="story-content">
+                Today, world coffee prices experienced a minor decline as traders reacted to reduced demand following the holiday season. Economic uncertainties, particularly fluctuations in currency values, are causing instability in the market. Brazil, the largest coffee producer, is facing challenges due to adverse weather conditions affecting crop yields. Additionally, political tensions in key coffee-producing regions contribute to market volatility. Analysts suggest that these factors may lead to further fluctuations in prices if demand does not stabilize soon. The market remains cautious as traders monitor global economic indicators and weather forecasts closely. With ongoing concerns about inflation and potential supply chain disruptions, any shifts in consumer behavior could greatly impact pricing trends. As the situation evolves, stakeholders in the coffee industry are advised to stay informed about both local and international developments that could influence market dynamics in the coming days.
+            </div>
+        </div>
+
+        <div class="graph-container">
+            <canvas id="priceChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        const content = {
+            '1D': {
+                video: 'https://www.youtube.com/embed/0LaZXlbL3dg',
+                title: 'The Coffee Report - 1 Day',
+                story: "Today, world coffee prices experienced a minor decline as traders reacted to reduced demand following the holiday season. Economic uncertainties, particularly fluctuations in currency values, are causing instability in the market. Brazil, the largest coffee producer, is facing challenges due to adverse weather conditions affecting crop yields. Additionally, political tensions in key coffee-producing regions contribute to market volatility. Analysts suggest that these factors may lead to further fluctuations in prices if demand does not stabilize soon. The market remains cautious as traders monitor global economic indicators and weather forecasts closely. With ongoing concerns about inflation and potential supply chain disruptions, any shifts in consumer behavior could greatly impact pricing trends. As the situation evolves, stakeholders in the coffee industry are advised to stay informed about both local and international developments that could influence market dynamics in the coming days.",
+                chartData: {
+                    labels: ['9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00'],
+                    data: [118, 119, 117, 120, 118, 121, 119, 120]
+                }
+            },
+            '5D': {
+                video: 'https://www.youtube.com/embed/ORrjHkCFlXE',
+                title: 'The Coffee Report - 5 Days',
+                story: "Over the past week, coffee prices have shown considerable volatility, primarily driven by concerns over Brazil's ongoing drought and its potential impact on coffee production. The drought has raised fears of lower yields, prompting traders to adjust their expectations accordingly. Furthermore, political tensions in producing countries like Colombia have added to market instability, with potential disruptions in supply chains becoming a growing concern. As traders assess weather patterns and geopolitical developments, price fluctuations are likely to continue as they react to changing conditions. The market is also responding to broader economic trends, including inflationary pressures that affect consumer purchasing power globally. Analysts are keeping a close eye on these interconnected factors that could influence coffee prices moving forward. If conditions do not improve soon, both producers and consumers may face challenges as they navigate this increasingly complex landscape of global coffee trade and pricing dynamics.",
+                chartData: {
+                    labels: ['Dec 29', 'Dec 30', 'Dec 31', 'Jan 1', 'Jan 2'],
+                    data: [116, 118, 117, 119, 120]
+                }
+            },
+            '1M': {
+                video: 'https://www.youtube.com/embed/CfD26cOPThY',
+                title: 'The Coffee Report - 1 Month',
+                story: "In the last month, coffee prices surged by approximately 10%, largely driven by adverse weather conditions affecting major producers like Brazil and Vietnam. Reports indicate that prolonged droughts have led to fears of significant crop failures, prompting traders to increase their price forecasts significantly. Additionally, rising production costs due to inflation and supply chain disruptions have put further pressure on prices across the board. As consumers adapt to higher costs for goods globally, coffee producers are grappling with maintaining profitability amid these challenges. Political instability in key regions also raises concerns about future supply disruptions that could exacerbate price increases even further. Analysts predict that unless weather conditions improve or production stabilizes soon, prices may continue to rise as demand remains strong in emerging markets seeking quality coffee products. Overall, the combination of climate issues and economic pressures is reshaping the landscape for coffee pricing significantly this month as stakeholders adjust their strategies accordingly.",
+                chartData: {
+                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                    data: [110, 115, 118, 120]
+                }
+            },
+            '6M': {
+                video: 'https://www.youtube.com/embed/mibjQBR4IE8',
+                title: 'The Coffee Report - 6 Months',
+                story: "Over the past six months, coffee prices have experienced a notable increase driven by a confluence of climate challenges and labor shortages affecting major producing countries worldwide. The ongoing impacts of climate change have led to unpredictable weather patterns that threaten crop yields across Latin America and Asia significantly. Additionally, labor shortages exacerbated by pandemic-related disruptions have made it increasingly difficult for farms to maintain production levels necessary for meeting global demand. Speculation surrounding future harvests has added another layer of uncertainty to the market as traders react swiftly to changing conditions and forecasts from agricultural experts. Political instability in producing regions further complicates matters, with potential disruptions in supply chains becoming a growing concern for traders and consumers alike.",
+                chartData: {
+                    labels: ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    data: [105, 108, 112, 115, 118, 120]
+                }
+            },
+            '1Y': {
+                video: 'https://www.youtube.com/embed/krz7tx_b-rE',
+                title: 'The Coffee Report - 1 Year',
+                story: "The past year has seen coffee prices reach multi-year highs as a perfect storm of factors converged to create significant supply constraints amid robust global demand. Severe frost damage in Brazil's coffee-growing regions early in the year decimated crops, leading to reduced output from the world's largest producer. This was compounded by ongoing drought conditions in other key growing areas, further tightening global supplies. Meanwhile, shipping bottlenecks and soaring freight costs have added to the price pressures, making it more expensive to move coffee beans from origin to consuming markets. The COVID-19 pandemic has continued to influence consumption patterns, with at-home coffee consumption remaining strong even as out-of-home consumption began to recover in many markets. These factors have led to a sustained bull market in coffee, with prices maintaining their upward trajectory throughout much of the year. Analysts are closely monitoring weather patterns and production forecasts for the coming season, as any further supply shocks could potentially push prices even higher.",
+                chartData: {
+                    labels: ['Jan 2024', 'Mar 2024', 'May 2024', 'Jul 2024', 'Sep 2024', 'Nov 2024', 'Jan 2025'],
+                    data: [100, 105, 110, 115, 118, 120, 122]
+                }
+            },
+            '5Y': {
+                video: 'https://www.youtube.com/embed/2NB6chcea6k',
+                title: 'The Coffee Report - 5 Years',
+                story: "The five-year trajectory of coffee prices reveals a complex interplay of market forces, environmental challenges, and shifting consumer preferences. The period began with prices at relatively low levels due to oversupply, but this situation gradually reversed as climate change impacts became more pronounced. Extreme weather events, including droughts, frosts, and excessive rainfall, have increasingly affected major coffee-growing regions, leading to more volatile production levels and upward pressure on prices. The specialty coffee segment has seen particularly strong growth, driven by increasing consumer interest in high-quality, sustainably sourced beans. This trend has supported higher prices for premium coffees while also incentivizing producers to focus on quality over quantity. The COVID-19 pandemic marked a significant turning point, initially causing a sharp drop in prices due to uncertainty and disrupted consumption patterns, followed by a strong recovery as at-home consumption surged. Throughout this period, the coffee industry has grappled with sustainability challenges, including concerns about farmer livelihoods and environmental impact. These factors have contributed to a gradual but persistent upward trend in coffee prices over the five-year span, with periods of significant volatility reflecting the many variables influencing the global coffee market.",
+                chartData: {
+                    labels: ['2020', '2021', '2022', '2023', '2024', '2025'],
+                    data: [90, 95, 105, 110, 120, 122]
+                }
+            }
+        };
+
+        let chart;
+
+        function updateContent(period) {
+            document.querySelectorAll('.time-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-period="${period}"]`).classList.add('active');
+            
+            document.getElementById('video-frame').src = content[period].video;
+            document.getElementById('story-title').textContent = content[period].title;
+            document.getElementById('story-content').textContent = content[period].story;
+            
+            updateChart(period);
+        }
+
+        function updateChart(period) {
+            const ctx = document.getElementById('priceChart').getContext('2d');
+            
+            if (chart) {
+                chart.destroy();
+            }
+            
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: content[period].chartData.labels,
+                    datasets: [{
+                        label: 'Coffee Price Index',
+                        data: content[period].chartData.data,
+                        borderColor: 'rgb(75, 192, 192)',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            title: {
+                                display: true,
+                                text: 'Index (100 = Jan 1, 2024 price)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        document.querySelectorAll('.time-button').forEach(button => {
+            button.addEventListener('click', function() {
+                updateContent(this.getAttribute('data-period'));
+            });
+        });
+
+        // Initialize with 1D data
+        document.addEventListener('DOMContentLoaded', function() {
+            updateContent('1D');
+        });
+    </script>
+</body>
+</html>
